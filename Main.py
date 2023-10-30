@@ -57,7 +57,6 @@ plt.xlabel('Predicciones')
 plt.ylabel('Etiquetas Reales')
 plt.title('Matriz de Confusión (Datos originales)')
 plt.show()
-plt.show()
 
 #%% ESCALADO MULTIDIMENSIONAL 3 DIMENSIONES
 #%%% Transformación
@@ -201,19 +200,6 @@ classification_report_2 = classification_report(y_test, y_pred)
 confusion_2 = confusion_matrix(y_test, y_pred)
 
 #%%% Métricas de evaluación
-
-#   Datos originales
-print('_' * 55)  
-print('\nResultados con los datos originales:')
-print(f'\nPrecisión: {accuracy_2}')
-print(f'\nInforme de clasificación:\n{classification_report_2}\n')
-
-sns.heatmap(confusion_2, annot=True, fmt='d', cmap='Blues')
-plt.xlabel('Predicciones')
-plt.ylabel('Etiquetas Reales')
-plt.title('Matriz de Confusión (2 dimensiones)')
-plt.show()
-#%%% MÉTRICAS DE EVALUACIÓN
 
 #   2 Dimensiones
 print('_' * 55)  
