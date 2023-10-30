@@ -136,3 +136,93 @@ plt.xlabel('Predicciones')
 plt.ylabel('Etiquetas Reales')
 plt.title('Matriz de Confusión (3 dimensiones)')
 plt.show()
+
+#%% ESCALADO MULTIDIMENSIONAL 2 DIMENSIONES
+#%%% Transformación
+
+mds = MDS(n_components=2)
+mds_result = mds.fit_transform(X_normalizado)
+
+print("\nCoordenadas Proyectadas:")
+print(mds_result)
+
+# Imprime el stress
+print(f"Stress: {mds.stress}")
+
+#%%% Centrado de Coordenadas
+mean_coords = np.mean(mds_result, axis=0)
+mds_result_centered = mds_result - mean_coords
+std_coords = np.std(mds_result_centered, axis=0)
+mds_result_normalized = mds_result_centered / std_coords
+
+componentes_principales_df = pd.DataFrame(mds_result_normalized[:, :2], columns=['Componente 1', 'Componente 2'])
+
+# Concatena el DataFrame de componentes principales con la Serie Y
+resultado = pd.concat([Y, componentes_principales_df], axis=1)
+
+#%%% Gráfica 2D
+
+# Definir los colores para cada clase
+colores = ['b', 'g', 'r']
+
+# Crear una figura y un eje
+fig, ax = plt.subplots()
+
+# Iterar a través de las clases y colores
+for clase, color in zip(resultado['class'].unique(), colores):
+    # Filtrar el DataFrame por clase
+    data = resultado[resultado['class'] == clase]
+    
+    # Crear una gráfica de dispersión para la clase actual
+    ax.scatter(data['Componente 1'], data['Componente 2'], c=color, label=f'Clase {clase}')
+
+# Agregar etiquetas de clase a la leyenda
+ax.legend()
+
+# Etiquetas de los ejes
+ax.set_xlabel('Componente 1')
+ax.set_ylabel('Componente 2')
+
+# Mostrar la gráfica
+plt.show()
+
+
+#%%% clasificación
+
+X_train, X_test, y_train, y_test = train_test_split(mds_result, Y, test_size=0.3, random_state=5)
+
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+accuracy_2 = accuracy_score(y_test, y_pred)
+classification_report_2 = classification_report(y_test, y_pred)
+confusion_2 = confusion_matrix(y_test, y_pred)
+
+#%%% Métricas de evaluación
+
+#   Datos originales
+print('_' * 55)  
+print('\nResultados con los datos originales:')
+print(f'\nPrecisión: {accuracy_2}')
+print(f'\nInforme de clasificación:\n{classification_report_2}\n')
+
+sns.heatmap(confusion_2, annot=True, fmt='d', cmap='Blues')
+plt.xlabel('Predicciones')
+plt.ylabel('Etiquetas Reales')
+plt.title('Matriz de Confusión (2 dimensiones)')
+plt.show()
+#%%% MÉTRICAS DE EVALUACIÓN
+
+#   2 Dimensiones
+print('_' * 55)  
+print('\nResultados con 2 Dimensiones:')
+print(f'\nPrecisión: {accuracy_2}')
+print(f'\nInforme de clasificación:\n{classification_report_2}\n')
+
+sns.heatmap(confusion_2, annot=True, fmt='d', cmap='Blues')
+plt.xlabel('Predicciones')
+plt.ylabel('Etiquetas Reales')
+plt.title('Matriz de Confusión (2 dimensiones)')
+plt.show()
